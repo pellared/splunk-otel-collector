@@ -36,7 +36,7 @@ func TestConfigDProviderHappyPath(t *testing.T) {
 	assert.Equal(t, "splunk.config.d", configD.Scheme())
 
 	configDir := filepath.Join(".", "testdata", "config.d")
-	retrieved, err := configD.Retrieve(context.Background(), fmt.Sprintf("%s:%s", configD.Scheme(), configDir), nil)
+	retrieved, err := configD.Retrieve(context.Background(), fmt.Sprintf("%s:false%c%s", configD.Scheme(), rune(30), configDir), nil)
 	assert.NoError(t, err)
 	require.NotNil(t, retrieved)
 
@@ -54,7 +54,7 @@ func TestConfigDProviderDifferentConfigDirs(t *testing.T) {
 
 	configD := provider.ConfigDProvider()
 	configDir := filepath.Join(".", "testdata", "config.d")
-	retrieved, err := configD.Retrieve(context.Background(), fmt.Sprintf("%s:%s", configD.Scheme(), configDir), nil)
+	retrieved, err := configD.Retrieve(context.Background(), fmt.Sprintf("%s:false%c%s", configD.Scheme(), rune(30), configDir), nil)
 	assert.NoError(t, err)
 	require.NotNil(t, retrieved)
 	conf, err := retrieved.AsRaw()
@@ -62,7 +62,7 @@ func TestConfigDProviderDifferentConfigDirs(t *testing.T) {
 	assert.Equal(t, expectedServiceConfig, conf)
 
 	configDir = filepath.Join(".", "testdata", "another-config.d")
-	retrieved, err = configD.Retrieve(context.Background(), fmt.Sprintf("%s:%s", configD.Scheme(), configDir), nil)
+	retrieved, err = configD.Retrieve(context.Background(), fmt.Sprintf("%s:false%c%s", configD.Scheme(), rune(30), configDir), nil)
 	assert.NoError(t, err)
 	require.NotNil(t, retrieved)
 	conf, err = retrieved.AsRaw()

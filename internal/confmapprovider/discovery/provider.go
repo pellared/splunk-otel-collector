@@ -17,10 +17,14 @@ package discovery
 import (
 	"context"
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 
 	"go.opentelemetry.io/collector/confmap"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+	"gopkg.in/yaml.v2"
 
 	"github.com/signalfx/splunk-otel-collector/internal/settings"
 )
@@ -52,16 +56,26 @@ func (p providerShim) Shutdown(ctx context.Context) error {
 }
 
 type mapProvider struct {
-	logger  *zap.Logger
-	configs map[string]*Config
+	logger     *zap.Logger
+	configs    map[string]*Config
+	discoverer *discoverer
 }
 
 func New() (Provider, error) {
 	m := &mapProvider{configs: map[string]*Config{}}
 	zapConfig := zap.NewProductionConfig()
-	zapConfig.Level = zap.NewAtomicLevelAt(zap.DebugLevel)
+	logLevel := zap.WarnLevel
+	if ll, ok := os.LookupEnv("SPLUNK_DISCOVERY_LOG_LEVEL"); ok {
+		if l, err := zapcore.ParseLevel(ll); err == nil {
+			logLevel = l
+		}
+	}
+	zapConfig.Level = zap.NewAtomicLevelAt(logLevel)
 	var err error
 	if m.logger, err = zapConfig.Build(); err != nil {
+		return (*mapProvider)(nil), err
+	}
+	if m.discoverer, err = newDiscoverer(m.logger); err != nil {
 		return (*mapProvider)(nil), err
 	}
 
@@ -89,9 +103,20 @@ func (m *mapProvider) retrieve(scheme string) func(context.Context, string, conf
 			return nil, fmt.Errorf("uri %q is not supported by %s provider", uri, scheme)
 		}
 
+		sepIdx := strings.IndexByte(uri, byte(rune(30)))
+		if sepIdx == -1 {
+			return nil, fmt.Errorf("invalid uri missing record separator: %q", uri)
+		}
+
+		dryRunBoolStr := uri[len(schemePrefix):sepIdx]
+		dryRun, err := strconv.ParseBool(dryRunBoolStr)
+		if err != nil {
+			return nil, fmt.Errorf("invalid dry run arg: %q", uri)
+		}
+
 		var cfg *Config
 		var ok bool
-		configDir := uri[len(schemePrefix):]
+		configDir := uri[sepIdx+1:]
 		if cfg, ok = m.configs[configDir]; !ok {
 			cfg = NewConfig(m.logger)
 			if err := cfg.Load(configDir); err != nil {
@@ -105,13 +130,27 @@ func (m *mapProvider) retrieve(scheme string) func(context.Context, string, conf
 		}
 
 		if strings.HasPrefix(uri, settings.DiscoveryModeScheme) {
-			// discovery mode not yet available in settings/main
-			// so this is more informative of future flow than anything
-			return nil, nil
+			discoveryCfg, err := m.discoverer.discover(cfg)
+			if err != nil {
+				return nil, fmt.Errorf("failed to successfully discover target services: %w", err)
+			}
+			if dryRun {
+				printYamlAndExit(discoveryCfg)
+			}
+			return confmap.NewRetrieved(discoveryCfg)
 		}
 
 		return nil, fmt.Errorf("unsupported %s scheme %q", scheme, uri)
 	}
+}
+
+func printYamlAndExit(cfg map[string]any) {
+	out, err := yaml.Marshal(cfg)
+	if err != nil {
+		panic(fmt.Errorf("failed marshaling discovery config: %w", err))
+	}
+	fmt.Printf("%s", out)
+	os.Exit(0)
 }
 
 func (m *mapProvider) ConfigDScheme() string {
