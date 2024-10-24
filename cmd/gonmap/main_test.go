@@ -13,12 +13,14 @@ func TestConvertTestdata(t *testing.T) {
 	err := xml.Unmarshal([]byte(example), &in)
 	require.NoError(t, err)
 	require.Equal(t, "nmap", in.Scanner, "proper input data")
-	got := convert(in)
+	got, err := convert(in)
+	require.NoError(t, err)
 	require.NotEmpty(t, got)
 }
 
 func TestConvertNil(t *testing.T) {
-	got := convert(nil)
+	got, err := convert(nil)
+	require.NoError(t, err)
 	require.Empty(t, got)
 }
 

@@ -1,6 +1,10 @@
 # nmap playground
 
 ```sh
+OTEL_SERVICE_NAME="gonmap" OTEL_RESOURCE_ATTRIBUTES="deployment.environment=hack-1743" OTEL_EXPORTER_OTLP_ENDPOINT="http://localhost:4317" go run . -sV --script default,vuln,brute localhost
+```
+
+```sh
 sudo apt install nmap
 sudo nmap --script-updatedb
 ```
@@ -33,6 +37,3 @@ nmap -sV --script default,vuln,brute localhost
 ls /usr/share/nmap/scripts
 ```
 
-```sh
-go run . -sV --script default,vuln,brute localhost
-```
