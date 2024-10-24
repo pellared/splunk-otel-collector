@@ -10,16 +10,12 @@ import (
 type Config struct {
 	Interval         string `mapstructure:"interval"`
 	ScannerArguments string `mapstructure:"scanner_arguments"`
+	Fake             bool   `mapstructure:"fake"`
 }
 
 // Validate checks if the receiver configuration is valid
 func (cfg *Config) Validate() error {
-	interval, _ := time.ParseDuration(cfg.Interval)
-	// if interval.Minutes() < 1 {
-	// 	return errors.New("when defined, the interval has to be set to at least 1 minute (1m)")
-	// }
-	_ = interval
-
+	// TODO: Add validation for interval.
 	//TODO: Add validation for scanner arguments.
 
 	return nil

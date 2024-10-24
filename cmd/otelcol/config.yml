@@ -1,18 +1,19 @@
 receivers:
   nmap: # this line represents the ID of your receiver
-    interval: 20s
+    interval: 10s
+    fake: true
 
 processors:
   batch:
 
 exporters:
   # NOTE: Prior to v0.86.0 use `logging` instead of `debug`.
-  splunk_hec:
-    token: "${SPLUNK_HEC_TOKEN}"
-    endpoint: "${SPLUNK_HEC_URL}"
-    source: "otel"
-    sourcetype: "otel"
-    profiling_data_enabled: false
+  # splunk_hec:
+  #   token: "${SPLUNK_HEC_TOKEN}"
+  #   endpoint: "${SPLUNK_HEC_URL}"
+  #   source: "otel"
+  #   sourcetype: "otel"
+  #   profiling_data_enabled: false
   otlp:
     endpoint: "localhost:4317"
     compression: none
@@ -27,7 +28,7 @@ service:
       receivers: [nmap]
       processors:
       - batch
-      exporters: [splunk_hec, debug, otlp]
+      exporters: [debug, otlp]
   telemetry:
     logs:
       level: debug
