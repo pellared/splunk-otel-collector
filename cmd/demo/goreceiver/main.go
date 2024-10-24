@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 )
 
@@ -13,6 +14,14 @@ type Service struct {
 }
 
 func main() {
+	coll := &collector{
+		Endpoint: ":4317",
+	}
+	err := coll.Start()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
 	services := []Service{
 		{
 			Port:    "3306/tcp",
@@ -46,5 +55,6 @@ func main() {
 	})
 
 	port := "8090"
+
 	http.ListenAndServe(":"+port, nil)
 }
