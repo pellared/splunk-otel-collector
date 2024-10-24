@@ -23,8 +23,7 @@ func main() {
 }
 
 func run() error {
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
-	defer cancel()
+	ctx := context.Background()
 
 	lp, err := newLoggerProvider(ctx)
 	if err != nil {
