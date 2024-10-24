@@ -7,15 +7,27 @@ processors:
 
 exporters:
   # NOTE: Prior to v0.86.0 use `logging` instead of `debug`.
+  splunk_hec:
+    token: "${SPLUNK_HEC_TOKEN}"
+    endpoint: "${SPLUNK_HEC_URL}"
+    source: "otel"
+    sourcetype: "otel"
+    profiling_data_enabled: false
+  otlp:
+    endpoint: "localhost:4317"
+    compression: none
+    tls:
+      insecure: true
   debug:
-    verbosity: detailed
+    verbosity: basic # detailed
 
 service:
   pipelines:
     logs:
       receivers: [nmap]
-      processors: [batch]
-      exporters: [debug]
+      processors:
+      - batch
+      exporters: [splunk_hec, debug, otlp]
   telemetry:
     logs:
       level: debug
