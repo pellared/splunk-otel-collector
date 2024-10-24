@@ -1,14 +1,17 @@
 import './App.css'
-import Table from './components/Table'
-import example from "./exampleData/examle.ts"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { menuItems } from "./data/menuItems.tsx";
+import RootLayout from "./layouts/RootLayout.tsx";
+
 function App() {
+
+  const router = createBrowserRouter(menuItems);
 
   return (
     <>
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
-      <Table data = {example}></Table>
+      <RootLayout>
+        <RouterProvider router={router}></RouterProvider>
+      </RootLayout>
     </>
   )
 }
