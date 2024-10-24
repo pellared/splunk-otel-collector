@@ -2,6 +2,8 @@
 dist/
 .local/
 
+/cmd/otelcol/otelcol
+
 # GoLand IDEA
 .idea
 *.iml
