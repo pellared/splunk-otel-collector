@@ -35,6 +35,10 @@ nmap -A -T4 localhost
 nmap -sV localhost
 ```
 
+```sh
+nmap -sV -sC -p- localhost
+```
+
 <https://nmap.org/book/nse-usage.html#nse-categories>
 
 ```sh
