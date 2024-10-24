@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import Header from "../components/root/Header";
 import Nav from "../components/root/Nav";
-import Main from "../components/root/main";
+import Main from "../components/root/Main";
 
 interface RootLayoutProps {
   children: ReactNode;
