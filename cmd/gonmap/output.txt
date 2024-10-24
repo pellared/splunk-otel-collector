@@ -1,0 +1,143 @@
+$ nmap -sV --script default,vuln,brute localhost
+Starting Nmap 7.80 ( https://nmap.org ) at 2024-10-23 17:50 CEST
+Nmap scan report for localhost (127.0.0.1)
+Host is up (0.000044s latency).
+Not shown: 997 closed ports
+PORT     STATE SERVICE VERSION
+3306/tcp open  mysql   MySQL 5.5.64-MariaDB-1~trusty
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+| mysql-brute: 
+|   Accounts: 
+|     root:password - Valid credentials
+|_  Statistics: Performed 45015 guesses in 54 seconds, average tps: 474.2
+| mysql-enum: 
+|   Accounts: No valid accounts found
+|   Statistics: Performed 0 guesses in 1 seconds, average tps: 0.0
+|_  ERROR: The service seems to have failed or is heavily firewalled...
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.5.64-MariaDB-1~trusty
+|   Thread ID: 97
+|   Capabilities flags: 63487
+|   Some Capabilities: LongColumnFlag, ConnectWithDatabase, Speaks41ProtocolNew, Support41Auth, FoundRows, Speaks41ProtocolOld, DontAllowDatabaseTableColumn, IgnoreSigpipes, ODBCClient, SupportsTransactions, SupportsLoadDataLocal, IgnoreSpaceBeforeParenthesis, LongPassword, InteractiveClient, SupportsCompression, SupportsMultipleStatments, SupportsAuthPlugins, SupportsMultipleResults
+|   Status: Autocommit
+|   Salt: r6Rx*a-Y\Bq6V.$ha/a}
+|_  Auth Plugin Name: mysql_native_password
+8080/tcp open  http    Apache httpd 2.4.57 ((Debian))
+|_citrix-brute-xml: FAILED: No domain specified (use ntdomain argument)
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+| http-brute:   
+|_  Path "/" does not require authentication
+| http-csrf: 
+| Spidering limited to: maxdepth=3; maxpagecount=20; withinhost=localhost
+|   Found the following possible CSRF vulnerabilities: 
+|     
+|     Path: http://localhost:8080/
+|     Form id: 
+|_    Form action: add_task.php
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-enum: 
+|_  /phpinfo.php: Possible information file
+|_http-open-proxy: Proxy might be redirecting requests
+|_http-server-header: Apache/2.4.57 (Debian)
+| http-sql-injection: 
+|   Possible sqli for queries:
+|     http://localhost:8080/delete_task.php?task_id=1%27%20OR%20sqlspider
+|     http://localhost:8080/%0a%22delete_task.php?task_id=2%22%27%20OR%20sqlspider
+|     http://localhost:8080/%0a%22delete_task.php?task_id=1%22%27%20OR%20sqlspider
+|     http://localhost:8080/delete_task.php?task_id=2%27%20OR%20sqlspider
+|_    http://localhost:8080/update_task.php?task_id=2%27%20OR%20sqlspider
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-title: Todo List
+|_http-vuln-cve2017-1001000: ERROR: Script execution failed (use -d to debug)
+| vulners: 
+|   cpe:/a:apache:http_server:2.4.57: 
+|       95499236-C9FE-56A6-9D7D-E943A24B633A    10.0    https://vulners.com/githubexploit/95499236-C9FE-56A6-9D7D-E943A24B633A  *EXPLOIT*
+|       2C119FFA-ECE0-5E14-A4A4-354A2C38071A    10.0    https://vulners.com/githubexploit/2C119FFA-ECE0-5E14-A4A4-354A2C38071A  *EXPLOIT*
+|       CVE-2024-38476  9.8     https://vulners.com/cve/CVE-2024-38476
+|       CVE-2024-38474  9.8     https://vulners.com/cve/CVE-2024-38474
+|       A5425A79-9D81-513A-9CC5-549D6321897C    9.8     https://vulners.com/githubexploit/A5425A79-9D81-513A-9CC5-549D6321897C  *EXPLOIT*
+|       CVE-2024-38475  9.1     https://vulners.com/cve/CVE-2024-38475
+|       0486EBEE-F207-570A-9AD8-33269E72220A    9.1     https://vulners.com/githubexploit/0486EBEE-F207-570A-9AD8-33269E72220A  *EXPLOIT*
+|       B0A9E5E8-7CCC-5984-9922-A89F11D6BF38    8.2     https://vulners.com/githubexploit/B0A9E5E8-7CCC-5984-9922-A89F11D6BF38  *EXPLOIT*
+|       CVE-2024-38473  8.1     https://vulners.com/cve/CVE-2024-38473
+|       249A954E-0189-5182-AE95-31C866A057E1    8.1     https://vulners.com/githubexploit/249A954E-0189-5182-AE95-31C866A057E1  *EXPLOIT*
+|       23079A70-8B37-56D2-9D37-F638EBF7F8B5    8.1     https://vulners.com/githubexploit/23079A70-8B37-56D2-9D37-F638EBF7F8B5  *EXPLOIT*
+|       F7F6E599-CEF4-5E03-8E10-FE18C4101E38    7.5     https://vulners.com/githubexploit/F7F6E599-CEF4-5E03-8E10-FE18C4101E38  *EXPLOIT*
+|       E5C174E5-D6E8-56E0-8403-D287DE52EB3F    7.5     https://vulners.com/githubexploit/E5C174E5-D6E8-56E0-8403-D287DE52EB3F  *EXPLOIT*
+|       DB6E1BBD-08B1-574D-A351-7D6BB9898A4A    7.5     https://vulners.com/githubexploit/DB6E1BBD-08B1-574D-A351-7D6BB9898A4A  *EXPLOIT*
+|       CVE-2024-40898  7.5     https://vulners.com/cve/CVE-2024-40898
+|       CVE-2024-39573  7.5     https://vulners.com/cve/CVE-2024-39573
+|       CVE-2024-38477  7.5     https://vulners.com/cve/CVE-2024-38477
+|       CVE-2024-38472  7.5     https://vulners.com/cve/CVE-2024-38472
+|       CVE-2024-27316  7.5     https://vulners.com/cve/CVE-2024-27316
+|       CVE-2023-43622  7.5     https://vulners.com/cve/CVE-2023-43622
+|       CVE-2023-31122  7.5     https://vulners.com/cve/CVE-2023-31122
+|       CDC791CD-A414-5ABE-A897-7CFA3C2D3D29    7.5     https://vulners.com/githubexploit/CDC791CD-A414-5ABE-A897-7CFA3C2D3D29  *EXPLOIT*
+|       C9A1C0C1-B6E3-5955-A4F1-DEA0E505B14B    7.5     https://vulners.com/githubexploit/C9A1C0C1-B6E3-5955-A4F1-DEA0E505B14B  *EXPLOIT*
+|       BD3652A9-D066-57BA-9943-4E34970463B9    7.5     https://vulners.com/githubexploit/BD3652A9-D066-57BA-9943-4E34970463B9  *EXPLOIT*
+|       B5E74010-A082-5ECE-AB37-623A5B33FE7D    7.5     https://vulners.com/githubexploit/B5E74010-A082-5ECE-AB37-623A5B33FE7D  *EXPLOIT*
+|       B0208442-6E17-5772-B12D-B5BE30FA5540    7.5     https://vulners.com/githubexploit/B0208442-6E17-5772-B12D-B5BE30FA5540  *EXPLOIT*
+|       A820A056-9F91-5059-B0BC-8D92C7A31A52    7.5     https://vulners.com/githubexploit/A820A056-9F91-5059-B0BC-8D92C7A31A52  *EXPLOIT*
+|       9814661A-35A4-5DB7-BB25-A1040F365C81    7.5     https://vulners.com/githubexploit/9814661A-35A4-5DB7-BB25-A1040F365C81  *EXPLOIT*
+|       5A864BCC-B490-5532-83AB-2E4109BB3C31    7.5     https://vulners.com/githubexploit/5A864BCC-B490-5532-83AB-2E4109BB3C31  *EXPLOIT*
+|       45D138AD-BEC6-552A-91EA-8816914CA7F4    7.5     https://vulners.com/githubexploit/45D138AD-BEC6-552A-91EA-8816914CA7F4  *EXPLOIT*
+|       17C6AD2A-8469-56C8-BBBE-1764D0DF1680    7.5     https://vulners.com/githubexploit/17C6AD2A-8469-56C8-BBBE-1764D0DF1680  *EXPLOIT*
+|       CVE-2023-45802  5.9     https://vulners.com/cve/CVE-2023-45802
+|       CVE-2024-39884  0.0     https://vulners.com/cve/CVE-2024-39884
+|       CVE-2024-36387  0.0     https://vulners.com/cve/CVE-2024-36387
+|       CVE-2024-24795  0.0     https://vulners.com/cve/CVE-2024-24795
+|_      CVE-2023-38709  0.0     https://vulners.com/cve/CVE-2023-38709
+8081/tcp open  http    Apache httpd 2.4.62 ((Debian))
+|_clamav-exec: ERROR: Script execution failed (use -d to debug)
+| http-brute:   
+|_  Path "/" does not require authentication
+|_http-csrf: Couldn't find any CSRF vulnerabilities.
+|_http-dombased-xss: Couldn't find any DOM based XSS.
+| http-enum: 
+|   /robots.txt: Robots file
+|_  /README: Interesting, a readme.
+| http-fileupload-exploiter: 
+|   
+|     Couldn't find a file-type field.
+|   
+|     Couldn't find a file-type field.
+|   
+|_    Couldn't find a file-type field.
+| http-form-brute: 
+|   Accounts: No valid accounts found
+|   Statistics: Performed 15 guesses in 1 seconds, average tps: 15.0
+|_  ERROR: The service seems to have failed or is heavily firewalled...
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_http-server-header: Apache/2.4.62 (Debian)
+| http-sql-injection: 
+|   Possible sqli for queries:
+|     http://localhost:8081/js/dist/error_report.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/vendor/tracekit.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/functions.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/ajax.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/messages.php?l=en%27%20OR%20sqlspider&lang=en&v=5.2.1
+|     http://localhost:8081/js/messages.php?l=en&lang=en%27%20OR%20sqlspider&v=5.2.1
+|     http://localhost:8081/js/messages.php?l=en&lang=en&v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/index.php?route=%2fimport%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/index.php?route=%2f%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/%20'index.php?route=%2f%27%3b%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/error_report.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/vendor/tracekit.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/functions.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/dist/ajax.js?v=5.2.1%27%20OR%20sqlspider
+|     http://localhost:8081/js/messages.php?l=en%27%20OR%20sqlspider&lang=en&v=5.2.1
+|     http://localhost:8081/js/messages.php?l=en&lang=en%27%20OR%20sqlspider&v=5.2.1
+|_    http://localhost:8081/js/messages.php?l=en&lang=en&v=5.2.1%27%20OR%20sqlspider
+|_http-stored-xss: Couldn't find any stored XSS vulnerabilities.
+|_http-title: phpMyAdmin
+|_http-vuln-cve2017-1001000: ERROR: Script execution failed (use -d to debug)
+
+Post-scan script results:
+| creds-summary: 
+|   127.0.0.1: 
+|     3306/mysql: 
+|_      root:password - Valid credentials
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 70.57 seconds

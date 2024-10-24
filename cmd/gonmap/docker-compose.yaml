@@ -1,0 +1,28 @@
+services:
+  apache:
+    build: .
+    restart: always
+    ports:
+      - 8080:80
+
+  mysql:
+    image: mariadb:5.5.64
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: todo
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    environment:
+      PMA_HOST: mysql
+
+volumes:
+  db:
