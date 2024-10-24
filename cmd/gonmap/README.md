@@ -34,5 +34,5 @@ ls /usr/share/nmap/scripts
 ```
 
 ```sh
-go run . nmap -sV --script default,vuln,brute localhost
+go run . -sV --script default,vuln,brute localhost
 ```
