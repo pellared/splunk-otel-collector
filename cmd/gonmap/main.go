@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/xml"
 	"fmt"
 	"math"
 	"os"
@@ -39,18 +40,29 @@ func run() error {
 		return fmt.Errorf("unable to create nmap scanner: %w", err)
 	}
 
-	result, warnings, err := scanner.Run()
-	if len(*warnings) > 0 {
-		fmt.Println("run finished with warnings:", *warnings) // Warnings are non-critical errors from nmap.
+	var res *nmap.Run
+
+	if os.Getenv("FAKE") != "" {
+		if err := xml.Unmarshal([]byte(example), &res); err != nil {
+			return err
+		}
+	} else {
+		var warnings *[]string
+		var err error
+		res, warnings, err = scanner.Run()
+		if len(*warnings) > 0 {
+			fmt.Println("run finished with warnings:", *warnings) // Warnings are non-critical errors from nmap.
+		}
+		if err != nil {
+			return fmt.Errorf("unable to run nmap scan: %w", err)
+		}
+
 	}
-	if err != nil {
-		return fmt.Errorf("unable to run nmap scan: %w", err)
-	}
-	v, err := convert(result)
+
+	v, err := convert(res)
 	if err != nil {
 		return fmt.Errorf("unable to covert result to log body: %w", err)
 	}
-
 	fmt.Println(v)
 
 	var r log.Record
