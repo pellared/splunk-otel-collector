@@ -41,7 +41,6 @@ function ServiceDiscovery() {
 
     return ( 
         <>
-            <h1>Service Discovery</h1>
             <Table data={data}></Table>
         </>
     );
