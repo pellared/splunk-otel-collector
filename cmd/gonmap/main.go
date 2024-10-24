@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/xml"
 	"fmt"
 	"math"
 	"os"
@@ -15,32 +16,60 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 	defer cancel()
+
+	lp, err := newLoggerProvider(ctx)
+	if err != nil {
+		return fmt.Errorf("unable to otel logger provider: %w", err)
+	}
+	defer lp.Shutdown(context.Background())
 
 	scanner, err := nmap.NewScanner(
 		ctx,
 		nmap.WithCustomArguments(os.Args[1:]...),
 	)
 	if err != nil {
-		fmt.Println("unable to create nmap scanner:", err)
-		os.Exit(1)
+		return fmt.Errorf("unable to create nmap scanner: %w", err)
 	}
 
-	result, warnings, err := scanner.Run()
-	if len(*warnings) > 0 {
-		fmt.Println("run finished with warnings:", *warnings) // Warnings are non-critical errors from nmap.
+	var res *nmap.Run
+
+	if os.Getenv("FAKE") != "" {
+		if err := xml.Unmarshal([]byte(example), &res); err != nil {
+			return err
+		}
+	} else {
+		var warnings *[]string
+		var err error
+		res, warnings, err = scanner.Run()
+		if len(*warnings) > 0 {
+			fmt.Println("run finished with warnings:", *warnings) // Warnings are non-critical errors from nmap.
+		}
+		if err != nil {
+			return fmt.Errorf("unable to run nmap scan: %w", err)
+		}
+
 	}
+
+	v, err := convert(res)
 	if err != nil {
-		fmt.Println("unable to run nmap scan:", err)
-		os.Exit(1)
-	}
-	v, err := convert(result)
-	if err != nil {
-		fmt.Println("unable to covert result to log body:", err)
-		os.Exit(1)
+		return fmt.Errorf("unable to covert result to log body: %w", err)
 	}
 	fmt.Println(v)
+
+	var r log.Record
+	r.AddAttributes(log.String("event.name", "nmap.run"))
+	r.SetBody(v)
+	lp.Logger("gonmap").Emit(context.Background(), r)
+	return nil
 }
 
 func convert(i any) (_ log.Value, err error) {
