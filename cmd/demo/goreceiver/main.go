@@ -16,8 +16,12 @@ type Service struct {
 }
 
 func main() {
+	endpoint := os.Getenv("OTEL_RECEIVER_OTLP_ENDPOINT")
+	if endpoint == "" {
+		endpoint = ":4317"
+	}
 	coll := &collector{
-		Endpoint: ":4317",
+		Endpoint: endpoint,
 	}
 	err := coll.Start()
 	if err != nil {
