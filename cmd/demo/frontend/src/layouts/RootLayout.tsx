@@ -9,14 +9,13 @@ interface RootLayoutProps {
 
 function RootLayout({ children }: RootLayoutProps) {
   return (
-    <>
-    <Header />
-    <Nav />
-    <Main>
-    { children }
-    </Main>
-    </>
+    <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] min-h-screen overflow-hidden">
+      <Nav />
+      <Header />
+      <Main>{children}</Main>
+    </div> 
   );
 }
 
 export default RootLayout;
+

@@ -7,10 +7,13 @@ interface RootLayoutProps {
 
 function Main({children} : RootLayoutProps) {
     return ( 
-        <main>
-            <PageList />
-            {children}
-        </main>
+    <main className="col-start-2 bg-white w-auto">
+      <PageList />
+      <div className="px-8">
+        <h1 className="font-bold my-8">ServiceDiscovery</h1>
+        {children}
+      </div>
+    </main>
      );
 }
 
