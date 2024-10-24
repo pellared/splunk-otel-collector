@@ -15,7 +15,7 @@ func TestConvertTestdata(t *testing.T) {
 	require.Equal(t, "nmap", in.Scanner, "proper input data")
 	got, err := convert(in)
 	require.NoError(t, err)
-	require.NotEmpty(t, got)
+	require.Empty(t, got.String())
 }
 
 func TestConvertNil(t *testing.T) {
