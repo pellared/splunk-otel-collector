@@ -3,7 +3,7 @@ services:
     build: .
     restart: always
     ports:
-      - 8080:80
+      - 8081:80
 
   mysql:
     image: mariadb:5.5.64
@@ -20,7 +20,7 @@ services:
     image: phpmyadmin
     restart: always
     ports:
-      - 8081:80
+      - 8082:80
     environment:
       PMA_HOST: mysql
 
