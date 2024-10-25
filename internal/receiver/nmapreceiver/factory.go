@@ -48,7 +48,7 @@ func createLogsReceiver(ctx context.Context, params receiver.Settings, baseCfg c
 		logger:       logger,
 		nextConsumer: consumer,
 		config:       nmapCfg,
-		scanner:      NewScanner(scanner, nmapCfg.Fake),
+		scanner:      NewScanner(scanner, logger),
 	}
 
 	return nmapRcvr, nil
