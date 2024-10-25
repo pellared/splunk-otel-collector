@@ -9,10 +9,18 @@ import (
 )
 
 type Service struct {
-	Port    string `json:"port"`
-	State   string `json:"state"`
-	Service string `json:"service"`
-	Version string `json:"version"`
+	Port            string          `json:"port"`
+	State           string          `json:"state"`
+	Service         string          `json:"service"`
+	Version         string          `json:"version"`
+	Vulnerabilities []Vulnerability `json:"vulnerabilities"`
+}
+
+type Vulnerability struct {
+	CVE       string `json:"cve"`
+	ExploitID string `json:"exploit_id"`
+	URL       string `json:"url"`
+	CVSS      string `json:"cvss"`
 }
 
 func main() {
@@ -88,7 +96,10 @@ func services(coll *collector) []Service {
 				}
 				body := lr.Body
 				for _, bv := range body.GetArrayValue().Values {
-					var port, protocol, state, serviceName, product, version string
+					var (
+						port, protocol, state, serviceName, product, version string
+						vulns                                                []Vulnerability
+					)
 					for _, f := range bv.GetKvlistValue().Values {
 						switch f.Key {
 						case "port":
@@ -106,15 +117,38 @@ func services(coll *collector) []Service {
 									product = sf.Value.GetStringValue()
 								case "version":
 									version = sf.Value.GetStringValue()
+								case "vulnerabilities":
+									for _, vf := range sf.Value.GetArrayValue().Values {
+										var cve, exploitID, url, cvss string
+										for _, vf := range vf.GetKvlistValue().Values {
+											switch vf.Key {
+											case "cve":
+												cve = vf.Value.GetStringValue()
+											case "exploit_id":
+												exploitID = vf.Value.GetStringValue()
+											case "url":
+												url = vf.Value.GetStringValue()
+											case "cvss":
+												cvss = vf.Value.GetStringValue()
+											}
+										}
+										vulns = append(vulns, Vulnerability{
+											CVE:       cve,
+											ExploitID: exploitID,
+											URL:       url,
+											CVSS:      cvss,
+										})
+									}
 								}
 							}
 						}
 					}
 					srvc := Service{
-						Port:    port + "/" + protocol,
-						State:   state,
-						Service: serviceName,
-						Version: product + " " + version,
+						Port:            port + "/" + protocol,
+						State:           state,
+						Service:         serviceName,
+						Version:         product + " " + version,
+						Vulnerabilities: vulns,
 					}
 					res = append(res, srvc)
 				}

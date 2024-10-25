@@ -21,9 +21,18 @@ type Port struct {
 
 // Service represents the discovered service.
 type Service struct {
-	Name    string
-	Product string
-	Version string
+	Name            string
+	Product         string
+	Version         string
+	Vulnerabilities []Vulnerability
+}
+
+// Vulnerability represents a vulnerability.
+type Vulnerability struct {
+	CVE       string
+	ExploitID string
+	URL       string
+	CVSS      string
 }
 
 // ToLogRecord converts the Scan to a [plog.LogRecord].
@@ -49,4 +58,16 @@ func (s Service) toMap(dest pcommon.Map) {
 	dest.PutStr("name", s.Name)
 	dest.PutStr("product", s.Product)
 	dest.PutStr("version", s.Version)
+	vs := dest.PutEmptySlice("vulnerabilities")
+	for _, v := range s.Vulnerabilities {
+		vm := vs.AppendEmpty().SetEmptyMap()
+		v.toMap(vm)
+	}
+}
+
+func (v Vulnerability) toMap(dest pcommon.Map) {
+	dest.PutStr("cve", v.CVE)
+	dest.PutStr("url", v.URL)
+	dest.PutStr("cvss", v.CVSS)
+	dest.PutStr("exploit_id", v.ExploitID)
 }
