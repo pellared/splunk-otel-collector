@@ -17,6 +17,7 @@ require (
 	github.com/hashicorp/vault-plugin-auth-gcp v0.19.0
 	github.com/hashicorp/vault/api v1.15.0
 	github.com/knadh/koanf v1.5.0
+	github.com/mattn/go-shellwords v1.0.12
 	github.com/open-telemetry/opentelemetry-collector-contrib/connector/countconnector v0.111.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/connector/routingconnector v0.111.0
 	github.com/open-telemetry/opentelemetry-collector-contrib/connector/spanmetricsconnector v0.111.0
@@ -160,6 +161,7 @@ require (
 	go.opentelemetry.io/otel/metric v1.31.0
 	go.opentelemetry.io/otel/sdk/log v0.7.0
 	go.opentelemetry.io/otel/trace v1.31.0
+	go.opentelemetry.io/proto/otlp v1.3.1
 	go.uber.org/atomic v1.11.0
 	go.uber.org/goleak v1.3.0
 	go.uber.org/multierr v1.11.0
@@ -388,7 +390,6 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout/stdoutlog v0.6.0 // indirect
 	go.opentelemetry.io/otel/exporters/stdout/stdoutmetric v1.30.0 // indirect
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.30.0 // indirect
-	go.opentelemetry.io/proto/otlp v1.3.1 // indirect
 	google.golang.org/genproto v0.0.0-20240903143218-8af14fe29dc1 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20241007155032-5fefd90f89a9 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20241007155032-5fefd90f89a9 // indirect
@@ -654,7 +655,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20240716161551-93cc26a95ae9 // indirect
 	gonum.org/v1/gonum v0.15.1 // indirect
 	google.golang.org/api v0.199.0 // indirect
-	google.golang.org/grpc v1.67.1 // indirect
+	google.golang.org/grpc v1.67.1
 	google.golang.org/protobuf v1.35.1 // indirect
 	gopkg.in/fsnotify.v1 v1.4.7 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0 // indirect

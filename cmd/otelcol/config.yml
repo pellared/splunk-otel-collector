@@ -1,7 +1,7 @@
 receivers:
   nmap: # this line represents the ID of your receiver
     interval: 10s
-    fake: true
+    scanner_arguments: "-sV -sC -p- localhost"
 
 processors:
   batch:
