@@ -1,20 +1,20 @@
-import { ReactNode } from "react";
-import PageList from "./PageList";
+import { pageTitles } from '../../data/PageTitles';
+import PageList from './PageList';
+import { Outlet, useLocation } from 'react-router-dom';
 
-interface RootLayoutProps {
-    children: ReactNode;
-  }
+function Main() {
+  const location = useLocation();
+  const currentPath = location.pathname;
 
-function Main({children} : RootLayoutProps) {
-    return ( 
+  return ( 
     <main className="col-start-2 bg-white w-auto">
-      <PageList />
+      <PageList currentPath={currentPath} />
       <div className="px-8">
-        <h1 className="font-bold my-8">ServiceDiscovery</h1>
-        {children}
+        <h1 className="font-bold my-8">{pageTitles[currentPath] || 'Service Discovery'}</h1>
+        <Outlet />
       </div>
     </main>
-     );
+  );
 }
 
 export default Main;

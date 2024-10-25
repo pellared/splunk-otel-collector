@@ -1,3 +1,4 @@
+import Example from "../pages/Example";
 import ServiceDiscovery from "../pages/ServiceDiscovery"
 import ServiceSecurity from "../pages/ServiceSecurity"
 
@@ -9,5 +10,9 @@ export const menuItems = [
     {
       path: "/ServiceSecurity",
       element: <ServiceSecurity />,
+    },
+    {
+      path: "/example",
+      element: <Example />,
     },
   ];

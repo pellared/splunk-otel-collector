@@ -4,16 +4,15 @@ import { menuItems } from "./data/menuItems.tsx";
 import RootLayout from "./layouts/RootLayout.tsx";
 
 function App() {
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <RootLayout />,
+      children: menuItems,
+    },
+  ]);
 
-  const router = createBrowserRouter(menuItems);
-
-  return (
-    <>
-      <RootLayout>
-        <RouterProvider router={router}></RouterProvider>
-      </RootLayout>
-    </>
-  )
+  return <RouterProvider router={router} />;
 }
 
-export default App
+export default App;
