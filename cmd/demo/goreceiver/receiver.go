@@ -37,6 +37,8 @@ func (coll *collector) Start() error {
 	coll.Endpoint = ln.Addr().String() // set actual endpoint
 
 	coll.logsService = &logsService{logs: &atomic.Pointer[[]*lpb.ResourceLogs]{}}
+	l := make([]*lpb.ResourceLogs, 0)
+	coll.logsService.logs.Store(&l)
 
 	coll.grpcSrv = grpc.NewServer()
 	clpb.RegisterLogsServiceServer(coll.grpcSrv, coll.logsService)

@@ -28,7 +28,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	http.HandleFunc("/services", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/services", func(w http.ResponseWriter, _ *http.Request) {
 		srvs := services(coll)
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -71,9 +71,6 @@ func services(coll *collector) []Service {
 	}
 
 	logs := coll.ExportedLogs()
-	if logs == nil {
-		return nil
-	}
 
 	var res []Service
 	for _, rl := range logs {
