@@ -1,29 +1,34 @@
-import { useState } from 'react';
-import Obj from '../models/Obj.ts';
+import { useMemo, useState } from 'react';
+//import ServiceDiscoveryType from '../models/ServiceDiscoveryType.ts';
 import Row from './Row';
-import TableHeader from './TableHeader';
+//import TableHeader from './TableHeader';
 
-interface TableProps {
-  data: Obj[];
+interface TableProps<T> {
+  data: T[];
 }
 
-function Table({ data }: TableProps) {
-  const [sortConfig, setSortConfig] = useState<{ key: keyof Obj; direction: 'asc' | 'desc' } | null>(null);
+function Table<T extends Record<string, any>>({ data }: TableProps<T>) {
+  const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: 'asc' | 'desc' } | null>(null);
+
+  // Extract headers dynamically from data field names
+  const headers = useMemo(() => {
+    if (data.length === 0) return [];
+    return Object.keys(data[0]).map(key => ({
+      key: key as keyof T,
+      label: key.charAt(0).toUpperCase() + key.slice(1),
+    }));
+  }, [data]);
 
   const sortedData = [...data];
   if (sortConfig !== null) {
     sortedData.sort((a, b) => {
-      if (a[sortConfig.key] < b[sortConfig.key]) {
-        return sortConfig.direction === 'asc' ? -1 : 1;
-      }
-      if (a[sortConfig.key] > b[sortConfig.key]) {
-        return sortConfig.direction === 'asc' ? 1 : -1;
-      }
+      if (a[sortConfig.key] < b[sortConfig.key]) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (a[sortConfig.key] > b[sortConfig.key]) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
   }
 
-  const handleSort = (key: keyof Obj) => {
+  const handleSort = (key: keyof T) => {
     let direction: 'asc' | 'desc' = 'asc';
     if (sortConfig && sortConfig.key === key && sortConfig.direction === 'asc') {
       direction = 'desc';
@@ -35,11 +40,21 @@ function Table({ data }: TableProps) {
     <div className="overflow-x-auto">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
-          <TableHeader sortConfig={sortConfig} handleSort={handleSort} />
+          <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+            {headers.map(header => (
+              <th
+                key={String(header.key)}
+                className="py-3 px-6 text-center border border-gray-300 cursor-pointer"
+                onClick={() => handleSort(header.key)}
+              >
+                {header.label} {sortConfig?.key === header.key ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '⯁'}
+              </th>
+            ))}
+          </tr>
         </thead>
         <tbody>
           {sortedData.map((item, index) => (
-            <Row key={index} {...item} />
+            <Row key={index} data={item} headers={headers} />
           ))}
         </tbody>
       </table>

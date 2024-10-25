@@ -1,12 +1,12 @@
-import Obj from "../models/Obj";
+import ServiceDiscoveryType from "../models/ServiceDiscoveryType";
 
 interface TableHeaderProps {
-  sortConfig: { key: keyof Obj; direction: 'asc' | 'desc' } | null;
-  handleSort: (key: keyof Obj) => void;
+  sortConfig: { key: keyof ServiceDiscoveryType; direction: 'asc' | 'desc' } | null;
+  handleSort: (key: keyof ServiceDiscoveryType) => void;
 }
 
 function TableHeader({ sortConfig, handleSort }: TableHeaderProps) {
-  const getSortDirection = (key: keyof Obj) => {
+  const getSortDirection = (key: keyof ServiceDiscoveryType) => {
     if (!sortConfig || sortConfig.key !== key) return '⯁';
     return sortConfig.direction === 'asc' ? '▲' : '▼';
   };

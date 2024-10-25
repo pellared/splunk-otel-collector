@@ -1,6 +1,6 @@
-import Obj from "../models/Obj.ts"
+import ServiceDiscoveryType from "../models/ServiceDiscoveryType.ts"
 
-const example: Obj[] = [
+const example: ServiceDiscoveryType[] = [
     {
       port: "3306/tcp",
       state: "open",

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import Table from '../components/Table.tsx';
-import Obj from "../models/Obj.ts"
+import ServiceDiscoveryType from "../models/ServiceDiscoveryType.ts"
+import empty from "../exampleData/empty.ts"
 
 function ServiceDiscovery() {
-    const [data, setData] = useState<Obj[]>([]);
+    const [data, setData] = useState<ServiceDiscoveryType[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -15,8 +16,14 @@ function ServiceDiscovery() {
                     throw new Error('Network response was not ok');
                 }
                 const jsonData = await response.json();
-                console.log(jsonData);
-                setData(jsonData);
+
+                if (Array.isArray(jsonData) && jsonData.length === 0) {
+                    setData(empty);
+                }
+                else {
+                    console.log(jsonData);
+                    setData(jsonData);
+                }
             } catch (err) {
                 if (err instanceof Error) {
                     setError(err.message);
@@ -36,7 +43,7 @@ function ServiceDiscovery() {
     }
 
     if (error) {
-        return <div>Error: {error}</div>;
+        return <div>{error}</div>;
     }
 
     return ( 
