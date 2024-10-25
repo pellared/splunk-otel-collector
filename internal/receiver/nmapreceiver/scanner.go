@@ -3,6 +3,7 @@ package nmapreceiver
 import (
 	"encoding/xml"
 	"fmt"
+	"os"
 
 	"github.com/Ullaakut/nmap/v3"
 	"go.uber.org/zap"
@@ -27,7 +28,7 @@ func NewScanner(scanner *nmap.Scanner, fake bool) *Scanner {
 func (s *Scanner) Run() (Scan, error) {
 	var res *nmap.Run
 
-	if false {
+	if os.Getenv("FAKE") == "" {
 		var (
 			warnings *[]string
 			err      error
