@@ -5,6 +5,9 @@ receivers:
 
 processors:
   batch:
+  resourcedetection:
+    detectors: [system]
+    override: true
 
 exporters:
   splunk_hec:
@@ -24,14 +27,15 @@ exporters:
 service:
   pipelines:
     logs:
-      receivers: 
-      - nmap
+      receivers:
+        - nmap
       processors:
-      - batch
+        - batch
+        - resourcedetection
       exporters:
-      - debug
-      - otlp
-      - splunk_hec
+        - debug
+        - otlp
+        - splunk_hec
   telemetry:
     logs:
       level: debug
