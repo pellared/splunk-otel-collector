@@ -1,7 +1,7 @@
 receivers:
   nmap:
     interval: 10s
-    scanner_arguments: "-sV -sC -p- localhost"
+    scanner_arguments: "-sV --script=default,vulners -p- localhost"
 
 processors:
   batch:
