@@ -9,16 +9,16 @@ export const exampleVal: ServiceSecurityType[] = [
     version: "MySQL 5.5.64-MariaDB-1~trusty",
     vulnerabilities: [
       {
-        CVE: "CVE-2019-10131",
-        ExploitID: "EXP-2019-10131",
-        URL: "https://nvd.nist.gov/vuln/detail/CVE-2019-10131",
-        CVSS: "7.2"
+        cve: "CVE-2019-10131",
+        exploit_id: "EXP-2019-10131",
+        url: "https://nvd.nist.gov/vuln/detail/CVE-2019-10131",
+        cvss: "7.2"
       },
       {
-        CVE: "CVE-2016-6663",
-        ExploitID: "EXP-2016-6663",
-        URL: "https://nvd.nist.gov/vuln/detail/CVE-2016-6663",
-        CVSS: "6.8"
+        cve: "CVE-2016-6663",
+        exploit_id: "EXP-2016-6663",
+        url: "https://nvd.nist.gov/vuln/detail/CVE-2016-6663",
+        cvss: "6.8"
       }
     ]
   },
@@ -30,17 +30,17 @@ export const exampleVal: ServiceSecurityType[] = [
     version: "Apache httpd 2.4.57 ((Debian))",
     vulnerabilities: [
       {
-        CVE: "CVE-2023-27522",
-        ExploitID: "EXP-2023-27522",
-        URL: "https://nvd.nist.gov/vuln/detail/CVE-2023-27522",
-        CVSS: "9.8"
+        cve: "CVE-2023-27522",
+        exploit_id: "EXP-2023-27522",
+        url: "https://nvd.nist.gov/vuln/detail/CVE-2023-27522",
+        cvss: "9.8"
       },
       {
-        CVE: "CVE-2021-42013",
-        ExploitID: "EXP-2021-42013",
-        URL: "https://nvd.nist.gov/vuln/detail/CVE-2021-42013",
-        CVSS: "7.5"
-      }
+        cve: "CVE-2023-27522",
+        exploit_id: "EXP-2023-27522",
+        url: "https://nvd.nist.gov/vuln/detail/CVE-2023-27522",
+        cvss: "9.8"
+      },
     ]
   },
   {

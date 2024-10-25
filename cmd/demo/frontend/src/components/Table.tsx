@@ -33,7 +33,7 @@ function Table<T extends Record<string, any>>({ data }: TableProps<T>) {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="h-96 overflow-y-scroll">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">

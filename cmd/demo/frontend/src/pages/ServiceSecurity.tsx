@@ -17,7 +17,7 @@ function ServiceSecurity() {
                 }
                 const jsonData = await response.json();
 
-                if (Array.isArray(jsonData) && jsonData.length === 0) {
+                if (Array.isArray(jsonData) && jsonData.length == 0 || jsonData == null) {
                     setData(emptySec);
                 }
                 else {
