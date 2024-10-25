@@ -1,9 +1,7 @@
 package nmapreceiver
 
 import (
-	"encoding/xml"
 	"fmt"
-	"os"
 	"strings"
 
 	"github.com/Ullaakut/nmap/v3"
@@ -26,25 +24,12 @@ func NewScanner(scanner *nmap.Scanner, logger *zap.Logger) *Scanner {
 
 // Run executes the nmap scan and returns the result.
 func (s *Scanner) Run() (Scan, error) {
-	var res *nmap.Run
-
-	if os.Getenv("FAKE") == "" {
-		var (
-			warnings *[]string
-			err      error
-		)
-		res, warnings, err = s.scanner.Run()
-		if len(*warnings) > 0 {
-			s.logger.Warn("nmap scan returned warnings", zap.Strings("warnings", *warnings))
-		}
-		if err != nil {
-			return Scan{}, fmt.Errorf("unable to run nmap scan: %w", err)
-		}
-	} else {
-		err := xml.Unmarshal([]byte(fakedata), &res)
-		if err != nil {
-			return Scan{}, err
-		}
+	res, warnings, err := s.scanner.Run()
+	if len(*warnings) > 0 {
+		s.logger.Warn("nmap scan returned warnings", zap.Strings("warnings", *warnings))
+	}
+	if err != nil {
+		return Scan{}, fmt.Errorf("unable to run nmap scan: %w", err)
 	}
 
 	var scan Scan

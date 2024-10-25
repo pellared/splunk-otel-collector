@@ -10,7 +10,6 @@ import (
 type Config struct {
 	Interval         string `mapstructure:"interval"`
 	ScannerArguments string `mapstructure:"scanner_arguments"`
-	Fake             bool   `mapstructure:"fake"`
 }
 
 // Validate checks if the receiver configuration is valid

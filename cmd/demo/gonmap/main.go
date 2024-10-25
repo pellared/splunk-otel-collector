@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"encoding/xml"
 	"fmt"
 	"math"
 	"os"
@@ -39,23 +38,9 @@ func run() error {
 		return fmt.Errorf("unable to create nmap scanner: %w", err)
 	}
 
-	var res *nmap.Run
-
-	if os.Getenv("FAKE") != "" {
-		if err := xml.Unmarshal([]byte(example), &res); err != nil {
-			return err
-		}
-	} else {
-		var warnings *[]string
-		var err error
-		res, warnings, err = scanner.Run()
-		if len(*warnings) > 0 {
-			fmt.Println("run finished with warnings:", *warnings) // Warnings are non-critical errors from nmap.
-		}
-		if err != nil {
-			return fmt.Errorf("unable to run nmap scan: %w", err)
-		}
-
+	res, _, err := scanner.Run()
+	if err != nil {
+		return fmt.Errorf("unable to run nmap scan: %w", err)
 	}
 
 	v, err := convert(res)

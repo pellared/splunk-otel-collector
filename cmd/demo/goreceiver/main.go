@@ -56,26 +56,6 @@ func main() {
 }
 
 func services(coll *collector) []Service {
-	if os.Getenv("FAKE") != "" {
-		return []Service{
-			{
-				Port:    "3306/tcp",
-				Service: "mysql",
-				Version: "MySQL 5.5.64-MariaDB-1~trusty",
-			},
-			{
-				Port:    "8080/tcp",
-				Service: "http",
-				Version: "Apache httpd 2.4.57 ((Debian))",
-			},
-			{
-				Port:    "8081/tcp",
-				Service: "http",
-				Version: "Apache httpd 2.4.62 ((Debian))",
-			},
-		}
-	}
-
 	logs := coll.ExportedLogs()
 
 	var res []Service
