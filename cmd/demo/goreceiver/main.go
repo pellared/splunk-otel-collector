@@ -11,6 +11,7 @@ import (
 type Service struct {
 	Port            string          `json:"port"`
 	State           string          `json:"state"`
+	Host            string          `json:"host"`
 	Service         string          `json:"service"`
 	Version         string          `json:"version"`
 	Vulnerabilities []Vulnerability `json:"vulnerabilities"`
@@ -82,11 +83,18 @@ func services(coll *collector) []Service {
 
 	var res []Service
 	for _, rl := range logs {
-		for _, sl := range rl.ScopeLogs {
-			for _, lr := range sl.LogRecords {
+		var host string
+		for _, attr := range rl.GetResource().GetAttributes() {
+			if attr.GetKey() == "host.name" {
+				host = attr.GetValue().GetStringValue()
+				break
+			}
+		}
+		for _, sl := range rl.GetScopeLogs() {
+			for _, lr := range sl.GetLogRecords() {
 				nmapEvent := false
-				for _, a := range lr.Attributes {
-					if a.Key == "event.name" && a.Value.GetStringValue() == "nmap.run" {
+				for _, a := range lr.GetAttributes() {
+					if a.Key == "event.name" && a.GetValue().GetStringValue() == "nmap.run" {
 						nmapEvent = true
 						break
 					}
@@ -94,42 +102,42 @@ func services(coll *collector) []Service {
 				if !nmapEvent {
 					break
 				}
-				body := lr.Body
-				for _, bv := range body.GetArrayValue().Values {
+
+				for _, bv := range lr.GetBody().GetArrayValue().GetValues() {
 					var (
 						port, protocol, state, serviceName, product, version string
 						vulns                                                []Vulnerability
 					)
-					for _, f := range bv.GetKvlistValue().Values {
+					for _, f := range bv.GetKvlistValue().GetValues() {
 						switch f.Key {
 						case "port":
-							port = strconv.Itoa(int(f.Value.GetIntValue()))
+							port = strconv.Itoa(int(f.GetValue().GetIntValue()))
 						case "protocol":
-							protocol = f.Value.GetStringValue()
+							protocol = f.GetValue().GetStringValue()
 						case "state":
-							state = f.Value.GetStringValue()
+							state = f.GetValue().GetStringValue()
 						case "service":
-							for _, sf := range f.Value.GetKvlistValue().Values {
+							for _, sf := range f.GetValue().GetKvlistValue().GetValues() {
 								switch sf.Key {
 								case "name":
-									serviceName = sf.Value.GetStringValue()
+									serviceName = sf.GetValue().GetStringValue()
 								case "product":
-									product = sf.Value.GetStringValue()
+									product = sf.GetValue().GetStringValue()
 								case "version":
-									version = sf.Value.GetStringValue()
+									version = sf.GetValue().GetStringValue()
 								case "vulnerabilities":
-									for _, vf := range sf.Value.GetArrayValue().Values {
+									for _, vf := range sf.GetValue().GetArrayValue().GetValues() {
 										var cve, exploitID, url, cvss string
-										for _, vf := range vf.GetKvlistValue().Values {
-											switch vf.Key {
+										for _, vf := range vf.GetKvlistValue().GetValues() {
+											switch vf.GetKey() {
 											case "cve":
-												cve = vf.Value.GetStringValue()
+												cve = vf.GetValue().GetStringValue()
 											case "exploit_id":
-												exploitID = vf.Value.GetStringValue()
+												exploitID = vf.GetValue().GetStringValue()
 											case "url":
-												url = vf.Value.GetStringValue()
+												url = vf.GetValue().GetStringValue()
 											case "cvss":
-												cvss = vf.Value.GetStringValue()
+												cvss = vf.GetValue().GetStringValue()
 											}
 										}
 										vulns = append(vulns, Vulnerability{
@@ -145,6 +153,7 @@ func services(coll *collector) []Service {
 					}
 					srvc := Service{
 						Port:            port + "/" + protocol,
+						Host:            host,
 						State:           state,
 						Service:         serviceName,
 						Version:         product + " " + version,
