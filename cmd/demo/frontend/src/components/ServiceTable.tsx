@@ -98,6 +98,12 @@ function ServiceTable({ data }: TableProps) {
             <th className="py-3 px-6 text-center border border-gray-300 cursor-pointer" onClick={() => handleSort('port')}>
               Port {sortConfig?.key === 'port' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '⯁'}
             </th>
+            <th className="py-3 px-6 text-center border border-gray-300 cursor-pointer" onClick={() => handleSort('state')}>
+              State {sortConfig?.key === 'state' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '⯁'}
+            </th>
+            <th className="py-3 px-6 text-center border border-gray-300 cursor-pointer" onClick={() => handleSort('host')}>
+              Host {sortConfig?.key === 'host' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '⯁'}
+            </th>
             <th className="py-3 px-6 text-center border border-gray-300 cursor-pointer" onClick={() => handleSort('service')}>
               Service {sortConfig?.key === 'service' ? (sortConfig.direction === 'asc' ? '▲' : '▼') : '⯁'}
             </th>

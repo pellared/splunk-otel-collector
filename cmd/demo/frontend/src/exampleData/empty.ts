@@ -2,9 +2,11 @@ import ServiceDiscoveryType from "../models/ServiceDiscoveryType.ts"
 
 const empty: ServiceDiscoveryType[] = [
     {
-      port: "",
-      service: "",
-      version: ""
+        port: "",
+        state: "",
+        host: "",
+        service: "",
+        version: ""
     },
 ]
 

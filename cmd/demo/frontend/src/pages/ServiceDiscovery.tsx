@@ -15,7 +15,7 @@ function ServiceDiscovery() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const jsonData = await response.json();
+                const jsonData :ServiceDiscoveryType[] = await response.json();
 
                 if (Array.isArray(jsonData) && jsonData.length === 0) {
                     setData(empty);
