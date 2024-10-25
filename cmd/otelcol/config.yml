@@ -7,12 +7,12 @@ processors:
   batch:
 
 exporters:
-  # splunk_hec:
-  #   token: "${SPLUNK_HEC_TOKEN}"
-  #   endpoint: "${SPLUNK_HEC_URL}"
-  #   source: "otel"
-  #   sourcetype: "otel"
-  #   profiling_data_enabled: false
+  splunk_hec:
+    token: "${SPLUNK_HEC_TOKEN}"
+    endpoint: "${SPLUNK_HEC_URL}"
+    source: "otel"
+    sourcetype: "otel"
+    profiling_data_enabled: false
   otlp: # sending
     endpoint: "localhost:4317"
     compression: none
@@ -31,7 +31,7 @@ service:
       exporters:
       - debug
       - otlp
-      # - splunk_hec
+      - splunk_hec
   telemetry:
     logs:
       level: debug
