@@ -91,7 +91,7 @@ func services(coll *collector) []Service {
 					var port, protocol, state, serviceName, product, version string
 					for _, f := range bv.GetKvlistValue().Values {
 						switch f.Key {
-						case "port_id":
+						case "port":
 							port = strconv.Itoa(int(f.Value.GetIntValue()))
 						case "protocol":
 							protocol = f.Value.GetStringValue()

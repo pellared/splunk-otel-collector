@@ -38,7 +38,7 @@ func (s Scan) ToLogRecord(dest plog.LogRecord) {
 }
 
 func (p Port) toMap(dest pcommon.Map) {
-	dest.PutInt("port_id", int64(p.ID))
+	dest.PutInt("port", int64(p.ID))
 	dest.PutStr("protocol", p.Protocol)
 	dest.PutStr("state", p.State)
 	serviceMap := dest.PutEmptyMap("service")
