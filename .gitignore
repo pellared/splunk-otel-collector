@@ -2,6 +2,10 @@
 dist/
 .local/
 
+/cmd/demo/goreceiver/goreceiver
+/cmd/otelcol/otelcol
+*.exe
+
 # GoLand IDEA
 .idea
 *.iml

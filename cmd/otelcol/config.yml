@@ -1,0 +1,41 @@
+receivers:
+  nmap:
+    interval: 10s
+    scanner_arguments: "-sV --script=default,vulners -p- localhost"
+
+processors:
+  batch:
+  resourcedetection:
+    detectors: [system]
+    override: true
+
+exporters:
+  splunk_hec: # send nmap events to Splunk Cloud
+    token: "${SPLUNK_HEC_TOKEN}"
+    endpoint: "${SPLUNK_HEC_URL}"
+    source: "otel"
+    sourcetype: "otel"
+    profiling_data_enabled: false
+  otlp: # sending to events to goreceiver created during the Grand Hackathon
+    endpoint: "localhost:4317"
+    compression: none
+    tls:
+      insecure: true
+  debug:
+    verbosity: basic # detailed
+
+service:
+  pipelines:
+    logs:
+      receivers:
+        - nmap
+      processors:
+        - batch
+        - resourcedetection
+      exporters:
+        - debug
+        - otlp
+        - splunk_hec
+  telemetry:
+    logs:
+      level: debug
