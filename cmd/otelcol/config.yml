@@ -10,13 +10,13 @@ processors:
     override: true
 
 exporters:
-  splunk_hec:
+  splunk_hec: # send nmap events to Splunk Cloud
     token: "${SPLUNK_HEC_TOKEN}"
     endpoint: "${SPLUNK_HEC_URL}"
     source: "otel"
     sourcetype: "otel"
     profiling_data_enabled: false
-  otlp: # sending
+  otlp: # sending to events to goreceiver created during the Grand Hackathon
     endpoint: "localhost:4317"
     compression: none
     tls:
