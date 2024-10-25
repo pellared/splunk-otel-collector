@@ -1,7 +1,4 @@
 import { useMemo, useState } from 'react';
-//import ServiceDiscoveryType from '../models/ServiceDiscoveryType.ts';
-import Row from './Row';
-//import TableHeader from './TableHeader';
 
 interface TableProps<T> {
   data: T[];
@@ -10,7 +7,6 @@ interface TableProps<T> {
 function Table<T extends Record<string, any>>({ data }: TableProps<T>) {
   const [sortConfig, setSortConfig] = useState<{ key: keyof T; direction: 'asc' | 'desc' } | null>(null);
 
-  // Extract headers dynamically from data field names
   const headers = useMemo(() => {
     if (data.length === 0) return [];
     return Object.keys(data[0]).map(key => ({
@@ -60,6 +56,33 @@ function Table<T extends Record<string, any>>({ data }: TableProps<T>) {
       </table>
     </div>
   );
+}
+
+interface RowProps<T> {
+  data: T;
+  headers: Array<{ key: keyof T; label: string }>;
+}
+
+function Row<T>({ data, headers }: RowProps<T>) {
+  return (
+    <tr className="border-b border-gray-300 hover:bg-gray-100">
+      {headers.map(header => (
+        <td key={String(header.key)} className="py-3 px-6 border border-gray-300 text-black">
+          {renderCellContent(data[header.key])}
+        </td>
+      ))}
+    </tr>
+  );
+}
+
+function renderCellContent(value: any): React.ReactNode {
+  if (Array.isArray(value)) {
+    return value.join(', ');
+  }
+  if (typeof value === 'string' || typeof value === 'number') {
+    return value;
+  }
+  return JSON.stringify(value);
 }
 
 export default Table;

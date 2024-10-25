@@ -1,9 +1,9 @@
-import Table from '../components/Table.tsx'
+import ServiceTable from '../components/ServiceTable.tsx'
 import exampleVal from "../exampleData/examleVal.ts"
 function Example() {
     return ( 
         <>
-            <Table data = {exampleVal}></Table>
+            <ServiceTable data = {exampleVal}></ServiceTable>
         </>
      );
 }

@@ -10,7 +10,6 @@ import (
 
 type Service struct {
 	Port            string          `json:"port"`
-	State           string          `json:"state"`
 	Service         string          `json:"service"`
 	Version         string          `json:"version"`
 	Vulnerabilities []Vulnerability `json:"vulnerabilities"`
@@ -59,19 +58,16 @@ func services(coll *collector) []Service {
 		return []Service{
 			{
 				Port:    "3306/tcp",
-				State:   "open",
 				Service: "mysql",
 				Version: "MySQL 5.5.64-MariaDB-1~trusty",
 			},
 			{
 				Port:    "8080/tcp",
-				State:   "open",
 				Service: "http",
 				Version: "Apache httpd 2.4.57 ((Debian))",
 			},
 			{
 				Port:    "8081/tcp",
-				State:   "open",
 				Service: "http",
 				Version: "Apache httpd 2.4.62 ((Debian))",
 			},
@@ -97,7 +93,7 @@ func services(coll *collector) []Service {
 				body := lr.Body
 				for _, bv := range body.GetArrayValue().Values {
 					var (
-						port, protocol, state, serviceName, product, version string
+						port, protocol, serviceName, product, version string
 						vulns                                                []Vulnerability
 					)
 					for _, f := range bv.GetKvlistValue().Values {
@@ -106,8 +102,6 @@ func services(coll *collector) []Service {
 							port = strconv.Itoa(int(f.Value.GetIntValue()))
 						case "protocol":
 							protocol = f.Value.GetStringValue()
-						case "state":
-							state = f.Value.GetStringValue()
 						case "service":
 							for _, sf := range f.Value.GetKvlistValue().Values {
 								switch sf.Key {
@@ -145,7 +139,6 @@ func services(coll *collector) []Service {
 					}
 					srvc := Service{
 						Port:            port + "/" + protocol,
-						State:           state,
 						Service:         serviceName,
 						Version:         product + " " + version,
 						Vulnerabilities: vulns,
