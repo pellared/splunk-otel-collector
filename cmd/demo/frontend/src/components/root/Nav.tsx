@@ -16,7 +16,7 @@ function Nav() {
     return (
         <nav className="row-span-2 w-64 bg-gray-50 h-screen flex flex-col justify-start border-r border-gray-300">
             {/* Left section with logo */}
-            <div className="flex items-center space-x-2 border-b border-gray-300">
+            <div className="flex items-center space-x-2 border-b h-14 border-gray-300">
                 {/* Logo placeholder */}
                 <img src="logo.png" alt="Logo" className="w-14 h-14" />
                 <p className="text-gray-900">GDI Cloud Integrations Sandbox</p>

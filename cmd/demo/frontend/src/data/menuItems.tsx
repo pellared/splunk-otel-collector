@@ -3,7 +3,7 @@ import ServiceSecurity from "../pages/ServiceSecurity"
 
 export const menuItems = [
     {
-      path: "/ServiceDiscovery",
+      path: "/",
       element: <ServiceDiscovery />,
     },
     {
