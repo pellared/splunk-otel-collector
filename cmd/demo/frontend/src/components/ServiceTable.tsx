@@ -42,7 +42,7 @@ function ServiceTable({ data }: TableProps) {
             return vulnConfig.direction === 'asc' ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
           } else if (typeof aValue === 'number' && typeof bValue === 'number') {
             return vulnConfig.direction === 'asc' ? aValue - bValue : bValue - aValue;
-          }
+          } 
           return 0;
         });
       }
@@ -91,7 +91,7 @@ function ServiceTable({ data }: TableProps) {
   };
 
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto h-96 overflow-y-scroll">
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
@@ -118,47 +118,49 @@ function ServiceTable({ data }: TableProps) {
         <tbody>
           {sortedData.map((item: ServiceSecurityType, index: number) => {
             const isExpanded = expandedRows.has(index);
-            const vulnCount = item.vulnerabilities.length;
+            const vulnCount = item.vulnerabilities?.length ?? 0;
 
             return (
               <React.Fragment key={index}>
-                <tr className={`border-b border-gray-300 cursor-pointer ${getRowBackgroundColor(vulnCount)}`} onClick={() => vulnCount > 0 && handleExpandClick(index)}>
+                <tr className={`border-b w-full border-gray-300 cursor-pointer ${getRowBackgroundColor(vulnCount)}`} onClick={() => vulnCount > 0 && handleExpandClick(index)}>
                   <td className="py-3 px-6 text-center border border-gray-300">{item.port}</td>
+                  <td className="py-3 px-6 text-center border border-gray-300">{item.state}</td>
+                  <td className="py-3 px-6 text-center border border-gray-300">{item.host}</td>
                   <td className="py-3 px-6 text-center border border-gray-300">{item.service}</td>
                   <td className="py-3 px-6 text-center border border-gray-300">{item.version}</td>
                   <td className="py-3 px-6 text-center border border-gray-300">{vulnCount > 0 ? vulnCount : 'No Vulnerabilities'}</td>
                 </tr>
                 {isExpanded && vulnCount > 0 && (
                   <tr className="border-b border-gray-300">
-                    <td colSpan={4} className="p-4">
+                    <td colSpan={6} className="p-4 w-full">
                       <table className="min-w-full bg-gray-100 border border-gray-300">
                         <thead>
                           <tr>
-                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'CVE')}>
-                              CVE {vulnSortConfig[index]?.key === 'CVE' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
+                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'cve')}>
+                              CVE {vulnSortConfig[index]?.key === 'cve' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
                             </th>
-                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'ExploitID')}>
-                              ExploitID {vulnSortConfig[index]?.key === 'ExploitID' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
+                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'exploit_id')}>
+                              ExploitID {vulnSortConfig[index]?.key === 'exploit_id' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
                             </th>
-                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'URL')}>
-                              URL {vulnSortConfig[index]?.key === 'URL' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
+                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'url')}>
+                              URL {vulnSortConfig[index]?.key === 'url' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
                             </th>
-                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'CVSS')}>
-                              CVSS {vulnSortConfig[index]?.key === 'CVSS' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
+                            <th className="py-2 px-4 text-center border border-gray-300 cursor-pointer" onClick={() => handleVulnSort(index, 'cvss')}>
+                              CVSS {vulnSortConfig[index]?.key === 'cvss' ? (vulnSortConfig[index].direction === 'asc' ? '▲' : '▼') : '⯁'}
                             </th>
                           </tr>
                         </thead>
                         <tbody>
                           {item.vulnerabilities.map((vuln: VulnerabilityType, vulnIndex: number) => (
                             <tr key={vulnIndex} className="border-b border-gray-300">
-                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.CVE}</td>
-                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.ExploitID}</td>
+                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.cve}</td>
+                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.exploit_id}</td>
                               <td className="py-2 px-4 text-center border border-gray-300">
-                                <a href={vuln.URL} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
-                                  {vuln.URL}
+                                <a href={vuln.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">
+                                  {vuln.url}
                                 </a>
                               </td>
-                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.CVSS}</td>
+                              <td className="py-2 px-4 text-center border border-gray-300">{vuln.cvss}</td>
                             </tr>
                           ))}
                         </tbody>

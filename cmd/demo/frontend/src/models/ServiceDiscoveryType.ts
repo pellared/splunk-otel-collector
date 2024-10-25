@@ -1,7 +1,6 @@
 export default interface ServiceDiscoveryType {
-    port: string;
-    state: string;
     host: string;
+    port: string;
     service: string;
     version: string;
 }

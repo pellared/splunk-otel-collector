@@ -15,14 +15,26 @@ function ServiceDiscovery() {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                const jsonData :ServiceDiscoveryType[] = await response.json();
+                const jsonData = await response.json();
+                const mapdata: ServiceDiscoveryType[] = [];
+                
+                jsonData.forEach((e: ServiceDiscoveryType) => {
+                    mapdata.push({
+                        host: e.host,
+                        port: e.port,
+                        service: e.service,
+                        version: e.version
+                    });
+                });
+                
 
-                if (Array.isArray(jsonData) && jsonData.length === 0) {
+                if (Array.isArray(jsonData) && jsonData.length === 0 || jsonData == null) {
                     setData(empty);
                 }
                 else {
                     console.log(jsonData);
-                    setData(jsonData);
+                    console.log(mapdata);
+                    setData(mapdata);
                 }
             } catch (err) {
                 if (err instanceof Error) {
