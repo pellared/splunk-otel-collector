@@ -27,26 +27,28 @@ func (nr *nmapReceiver) Start(ctx context.Context, host component.Host) error {
 	}
 	_, nr.cancel = context.WithCancel(ctx)
 
-	//TODO: run scanner immediately.
-	//TODO: base intervals on the last scan time.
-	interval, _ := time.ParseDuration(nr.config.Interval)
+	interval, err := time.ParseDuration(nr.config.Interval)
+	if err != nil {
+		return err
+	}
 	go func() {
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
-
 		for {
+			nr.logger.Info("Processing nmap logs now!")
+			scan, err := nr.scanner.Run()
+			if err != nil {
+				nr.logger.Error("Error running nmap scan", zap.Error(err))
+				continue
+			}
+			pLogs := plog.NewLogs()
+			lr := pLogs.ResourceLogs().AppendEmpty().ScopeLogs().AppendEmpty().LogRecords().AppendEmpty()
+			scan.ToLogRecord(lr)
+			nr.nextConsumer.ConsumeLogs(ctx, pLogs)
+
 			select {
 			case <-ticker.C:
-				nr.logger.Info("Processing nmap logs now!")
-				scan, err := nr.scanner.Run()
-				if err != nil {
-					nr.logger.Error("Error running nmap scan", zap.Error(err))
-					continue
-				}
-				pLogs := plog.NewLogs()
-				lr := pLogs.ResourceLogs().AppendEmpty().ScopeLogs().AppendEmpty().LogRecords().AppendEmpty()
-				scan.ToLogRecord(lr)
-				nr.nextConsumer.ConsumeLogs(ctx, pLogs)
+				continue
 			case <-ctx.Done():
 				return
 			}
